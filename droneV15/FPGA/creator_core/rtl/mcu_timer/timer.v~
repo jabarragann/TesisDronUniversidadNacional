@@ -1,0 +1,30 @@
+module timer(reset, clk, enable,timerOut);
+	
+	//FPGA clock goes at 200Mh so the least significant bit in the timerOut will measure 20us.
+	// 1/200Mhz=5ns  5ns*(C8=200)=20us
+
+	input reset;
+	input clk;
+	input enable; 
+	output reg [15:0] timerOut;
+
+
+	reg [7:0] innerCounter=0;
+
+	always @(posedge clk)begin
+	if(enable)begin
+		if(innerCounter>=8'hC8)begin
+			timerOut<=timerOut+1'b1;
+			innerCounter<=0;
+		end
+		else begin
+			innerCounter<=innerCounter+1'b1;			
+		end
+	end
+	else begin
+		timerOut<=0;
+	end
+	end	
+			
+endmodule
+	
